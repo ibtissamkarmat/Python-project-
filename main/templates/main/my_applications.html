@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="My Applications - FreelanceHub">
+    <title>My Applications - FreelanceHub</title>
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+    <style>
+        .applications-container {
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+        
+        .application-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: box-shadow 0.3s ease;
+        }
+        
+        .application-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .application-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 1rem;
+        }
+        
+        .job-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #111827;
+        }
+        
+        .job-poster {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .application-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .meta-item {
+            color: #6b7280;
+        }
+        
+        .meta-label {
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .budget {
+            color: #10b981;
+            font-weight: 600;
+        }
+        
+        .application-letter {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 6px;
+            color: #374151;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-top: 1rem;
+        }
+        
+        .view-job-btn {
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+        
+        .empty-state-text {
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="header-content">
+            <a href="/" class="logo">FreelanceHub</a>
+            <nav class="nav">
+                {% if user.is_authenticated %}
+                    <span style="color: #6b7280; font-weight: 600;">👋 {{ user.username }}</span>
+                    <a href="/" class="btn btn-primary btn-sm">Browse Jobs</a>
+                    <a href="/logout/" class="btn btn-secondary btn-sm">Logout</a>
+                {% else %}
+                    <a href="/login/" class="btn btn-primary btn-sm">Login</a>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="applications-container">
+        <h1 style="margin-bottom: 2rem;">My Applications</h1>
+        
+        {% if applications %}
+            {% for application in applications %}
+                <div class="application-card">
+                    <div class="application-header">
+                        <div>
+                            <div class="job-title">{{ application.job.title }}</div>
+                            <div class="job-poster">Posted by {{ application.job.posted_by.username }}</div>
+                        </div>
+                        <div style="color: #6b7280; font-size: 0.875rem;">
+                            Applied {{ application.applied_at|date:"M d, Y" }}
+                        </div>
+                    </div>
+                    
+                    <div class="application-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Budget:</span> <span class="budget">${{ application.job.budget }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Status:</span>
+                            {% if application.job.status == 'open' %}
+                                <span style="color: #10b981;">✓ Open</span>
+                            {% else %}
+                                <span style="color: #ef4444;">✕ Closed</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
+                        <strong>Job Description:</strong><br>
+                        <span style="color: #374151;">{{ application.job.description|truncatewords:50 }}</span>
+                    </div>
+                    
+                    <div>
+                        <strong style="color: #6b7280; font-size: 0.875rem;">Your Application Letter:</strong>
+                        <div class="application-letter">{{ application.letter }}</div>
+                    </div>
+                    
+                    <a href="{% url 'job_detail' application.job.id %}" class="btn btn-primary view-job-btn">View Full Job</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <p class="empty-state-text" style="font-size: 1.1rem;">You haven't applied to any jobs yet</p>
+                <a href="/" class="btn btn-primary">Browse Available Jobs</a>
+            </div>
+        {% endif %}
+    </div>
+</main>
+
+<footer style="background: #1f2937; color: white; padding: 2rem 0; margin-top: 4rem; text-align: center;">
+    <div class="container">
+        <p style="margin: 0;">&copy; 2026 FreelanceHub. All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>
