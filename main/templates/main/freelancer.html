@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Student Freelancers - Create your profile and connect with clients">
+    <title>Student Freelancers</title>
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="header-content">
+            <a href="/" class="logo">FreelanceHub</a>
+            <nav class="nav">
+                {% if user.is_authenticated %}
+                    <span style="color: #6b7280; font-weight: 600;">👋 {{ user.username }}</span>
+                    <a href="/" class="btn btn-primary btn-sm">🏠 Home</a>
+                    <a href="/jobs/create/" class="btn btn-primary btn-sm">➕ Create Job</a>
+                    <a href="/logout/" class="btn btn-secondary btn-sm" style="color: black;">Logout</a>
+                {% else %}
+                    <a href="/login/" class="btn btn-primary btn-sm" style="color: black;">Login</a>
+                    <a href="/register/" class="btn btn-secondary btn-sm" style="color: black;">Sign Up</a>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>Build Your Freelancer Profile</h1>
+            <p>Showcase your skills and start earning by connecting with clients on FreelanceHub</p>
+        </div>
+
+        <!-- Profile Creation Section -->
+        {% if user.is_authenticated %}
+            <section class="section">
+                <h2 class="section-title">{% if user_profile %}📝 Update Your Profile{% else %}✨ Create Your Profile{% endif %}</h2>
+                
+                <form method="post" style="background: rgb(49, 116, 193); padding: 2rem; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); max-width: 600px; margin: 0 auto;">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                                {% if field.field.required %}<span style="color: var(--danger-color);">*</span>{% endif %}
+                            </label>
+                            
+                            {% if field.field.widget.input_type == 'textarea' %}
+                                <textarea name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control" {% if field.field.required %}required{% endif %}>{{ field.value|default:'' }}</textarea>
+                            {% elif field.field.widget.input_type == 'number' %}
+                                <input type="number" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control" value="{{ field.value|default:'' }}" {% if field.field.required %}required{% endif %}>
+                            {% else %}
+                                <input type="text" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control" value="{{ field.value|default:'' }}" placeholder="{{ field.label }}" {% if field.field.required %}required{% endif %}>
+                            {% endif %}
+                            
+                            {% if field.errors %}
+                                <div style="color: var(--danger-color); font-size: 0.875rem; margin-top: 0.5rem;">
+                                    {% for error in field.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">{% if user_profile %}💾 Update Profile{% else %}🚀 Create Profile{% endif %}</button>
+                        <a href="/" class="btn btn-secondary" style="flex: 1; text-align: center;">⬅ Cancel</a>
+                    </div>
+                </form>
+            </section>
+        {% else %}
+            <section class="section">
+                <div class="empty-state" style="background: linear-gradient(135deg, rgba(91, 99, 222, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%); border-color: var(--primary-color);">
+                    <div class="empty-state-icon">🔐</div>
+                    <p style="font-size: 1.1rem; margin-bottom: 1rem;">Login to create your freelancer profile</p>
+                    <a href="/login/" class="btn btn-primary">🔑 Login</a>
+                </div>
+            </section>
+        {% endif %}
+
+        <!-- Student Freelancers Section -->
+        <section class="section">
+            <h2 class="section-title">Available Student Freelancers</h2>
+            {% if students %}
+                <div class="cards-grid">
+                    {% for student in students %}
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ student.user.username }}</h3>
+                                <span class="card-badge">${{ student.price_per_hour }}/hr</span>
+                            </div>
+                            <p style="margin-bottom: 0.5rem;"><strong>Skills:</strong></p>
+                            <p class="card-content">{{ student.skills }}</p>
+                            {% if student.bio %}
+                                <p style="margin-bottom: 0.5rem;"><strong>About:</strong></p>
+                                <p class="card-content">{{ student.bio|truncatewords:25 }}</p>
+                            {% endif %}
+                            <div class="card-footer">
+                                <span class="card-meta">⭐ Student Freelancer</span>
+                                <span class="card-meta">Joined FreelanceHub</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">👨‍💻</div>
+                    <p>No student freelancers registered yet. Be the first to create your profile!</p>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <p style="margin-bottom: 0;">© 2026 FreelanceHub. Connect with talented students.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="{% static 'main/script.js' %}"></script>
+</body>
+</html>
