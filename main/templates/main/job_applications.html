@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Job Applicants - FreelanceHub">
+    <title>Applicants - {{ job.title }} - FreelanceHub</title>
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+    <style>
+        .applicants-container {
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+        
+        .job-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .applicant-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .applicant-header {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .applicant-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #111827;
+        }
+        
+        .applicant-email {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .applicant-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .letter-label {
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .letter-content {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 6px;
+            color: #374151;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="header-content">
+            <a href="/" class="logo">FreelanceHub</a>
+            <nav class="nav">
+                {% if user.is_authenticated %}
+                    <span style="color: #6b7280; font-weight: 600;">👋 {{ user.username }}</span>
+                    <a href="/" class="btn btn-primary btn-sm">Dashboard</a>
+                    <a href="/logout/" class="btn btn-secondary btn-sm">Logout</a>
+                {% else %}
+                    <a href="/login/" class="btn btn-primary btn-sm">Login</a>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="applicants-container">
+        <a href="{% url 'job_detail' job.id %}" style="color: #667eea; text-decoration: none; margin-bottom: 1rem; display: inline-block;">← Back to Job</a>
+        
+        <div class="job-summary">
+            <h1 style="margin: 0 0 0.5rem 0;">{{ job.title }}</h1>
+            <p style="margin: 0; opacity: 0.9;">Budget: <strong>${{ job.budget }}</strong></p>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2 style="margin: 0;">Applicants ({{ applications.count }})</h2>
+        </div>
+        
+        {% if applications %}
+            {% for application in applications %}
+                <div class="applicant-card">
+                    <div class="applicant-header">
+                        <div class="applicant-name">{{ application.freelancer.username }}</div>
+                        <div class="applicant-email">{{ application.freelancer.email }}</div>
+                        <div class="applicant-date">Applied {{ application.applied_at|date:"M d, Y \a\t H:i" }}</div>
+                    </div>
+                    
+                    <div class="letter-label">Application Letter:</div>
+                    <div class="letter-content">{{ application.letter }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <p style="color: #6b7280; margin-bottom: 1rem;">No applications received yet</p>
+                <p style="color: #9ca3af; font-size: 0.875rem; margin: 0;">Check back later as freelancers discover your job posting</p>
+            </div>
+        {% endif %}
+    </div>
+</main>
+
+<footer style="background: #1f2937; color: white; padding: 2rem 0; margin-top: 4rem; text-align: center;">
+    <div class="container">
+        <p style="margin: 0;">&copy; 2026 FreelanceHub. All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>
