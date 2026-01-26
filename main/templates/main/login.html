@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login to FreelanceHub">
+    <title>Login - FreelanceHub</title>
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="header-content">
+            <a href="/" class="logo">FreelanceHub</a>
+            <nav class="nav">
+                <a href="/register/" class="btn btn-secondary btn-sm">Create Account</a>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <div style="max-width: 400px; margin: 4rem auto;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1 style="font-size: 2rem;">Welcome Back! 👋</h1>
+                <p style="color: #6b7280; margin-top: 0.5rem;">Login to your FreelanceHub account</p>
+            </div>
+
+            {% if error %}
+                <div style="background: #fee2e2; color: #dc2626; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; border-left: 4px solid #dc2626;">
+                    <strong>Login Failed</strong>
+                    <p style="margin-top: 0.5rem; margin-bottom: 0;">{{ error }}</p>
+                </div>
+            {% endif %}
+
+            <form method="post" style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+                {% csrf_token %}
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="username" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #1f2937;">Username</label>
+                    <input type="text" id="username" name="username" required placeholder="Enter your username" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 6px; font-size: 0.95rem; transition: all 0.3s;">
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <label for="password" style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #1f2937;">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 6px; font-size: 0.95rem; transition: all 0.3s;">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">🔐 Login</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <p style="color: #6b7280;">Don't have an account? <a href="/register/" style="color: #5b63de; font-weight: 600; text-decoration: none;">Sign up here</a></p>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e5e7eb;">
+                <p style="color: #9ca3af; font-size: 0.875rem;">
+                    Admin access? <a href="/admin/login/" style="color: #5b63de; text-decoration: none;">Admin login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <p style="margin-bottom: 0;">© 2026 FreelanceHub. Connect with talented students.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="{% static 'main/script.js' %}"></script>
+</body>
+</html>
