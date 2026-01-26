@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Post a new job on FreelanceHub">
+    <title>Create a Job - FreelanceHub</title>
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="header-content">
+            <a href="/" class="logo">FreelanceHub</a>
+            <nav class="nav">
+                {% if user.is_authenticated %}
+                    <span style="color: #6b7280; font-weight: 600;">👋 {{ user.username }}</span>
+                    <a href="/logout/" class="btn btn-secondary btn-sm">Logout</a>
+                {% else %}
+                    <a href="/login/" class="btn btn-primary btn-sm">Login</a>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <div style="max-width: 600px; margin: 2rem auto;">
+            <h1 style="margin-bottom: 1rem;">Post a New Job</h1>
+            <p style="color: #6b7280; margin-bottom: 2rem;">Fill in the details below to post your job and find the perfect freelancer</p>
+            
+            <form method="post" class="form-create-job">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {% if field.field.widget.input_type == 'textarea' %}
+                            <textarea name="{{ field.name }}" id="{{ field.id_for_label }}" {% if field.field.required %}required{% endif %} placeholder="{{ field.help_text }}"></textarea>
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
+                        {% if field.errors %}
+                            <div style="color: var(--danger-color); font-size: 0.875rem; margin-top: 0.5rem;">
+                                {% for error in field.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">📤 Post Job</button>
+                    <a href="/" class="btn btn-secondary" style="flex: 1; text-align: center;">⬅ Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <p style="margin-bottom: 0;">© 2026 FreelanceHub. Connect with talented students.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="{% static 'main/script.js' %}"></script>
+</body>
+</html>
