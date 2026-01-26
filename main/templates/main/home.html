@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Connect with talented student freelancers for your projects">
+    <title>Freelance Student Platform</title>
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div class="header-content">
+            <a href="/" class="logo">FreelanceHub</a>
+            <nav class="nav">
+                {% if user.is_authenticated %}
+                    <span style="color: #6b7280; font-weight: 600;">👋 {{ user.username }}</span>
+                    <a href="/freelancers/" class="btn btn-primary btn-sm">👨‍💻 Freelancers</a>
+                    <a href="/jobs/create/" class="btn btn-primary btn-sm">➕ Create Job</a>
+                    <a href="/logout/" class="btn btn-secondary btn-sm">Logout</a>
+                {% else %}
+                    <a href="/login/" class="btn btn-primary btn-sm">Login</a>
+                    <a href="/register/" class="btn btn-secondary btn-sm">Sign Up</a>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>Hire Top Student Freelancers</h1>
+            <p>Post your projects and connect with talented students ready to deliver quality work</p>
+        </div>
+
+        <!-- Available Jobs Section -->
+        <section class="section">
+            <h2 class="section-title">Available Jobs</h2>
+            {% if jobs %}
+                <div class="cards-grid">
+                    {% for job in jobs %}
+                        <a href="{% url 'job_detail' job.id %}" style="text-decoration: none; color: inherit;">
+                            <div class="card" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.05)'">
+                                <div class="card-header">
+                                    <h3 class="card-title">{{ job.title }}</h3>
+                                    <span class="card-badge">${{ job.budget }}</span>
+                                </div>
+                                <p class="card-content">{{ job.description|truncatewords:20 }}</p>
+                                <div class="card-footer">
+                                    <span class="card-meta">Posted by <strong>{{ job.posted_by.username }}</strong></span>
+                                    <span class="card-meta">{{ job.created_at|date:"M d, Y" }}</span>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">📋</div>
+                    <p>No jobs available yet. Be the first to post!</p>
+                </div>
+            {% endif %}
+        </section>
+
+        <!-- Student Freelancers Section -->
+        <section class="section">
+            <h2 class="section-title">Student Freelancers</h2>
+            {% if students %}
+                <div class="cards-grid">
+                    {% for student in students %}
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">{{ student.user.username }}</h3>
+                                <span class="card-badge">${{ student.price_per_hour }}/hr</span>
+                            </div>
+                            <p><strong>Skills:</strong></p>
+                            <p class="card-content">{{ student.skills }}</p>
+                            {% if student.bio %}
+                                <p class="card-content"><strong>About:</strong> {{ student.bio|truncatewords:15 }}</p>
+                            {% endif %}
+                            <div class="card-footer">
+                                <span class="card-meta">⭐ Student Freelancer</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">👨‍💻</div>
+                    <p>No student freelancers registered yet.</p>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <p style="margin-bottom: 0;">© 2026 FreelanceHub. Connect with talented students.</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
