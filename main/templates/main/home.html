@@ -16,9 +16,9 @@
             <a href="/" class="logo">FreelanceHub</a>
             <nav class="nav">
                 {% if user.is_authenticated %}
-                    <span style="color: #6b7280; font-weight: 600;">👋 {{ user.username }}</span>
-                    <a href="/freelancers/" class="btn btn-primary btn-sm">👨‍💻 Freelancers</a>
-                    <a href="/jobs/create/" class="btn btn-primary btn-sm">➕ Create Job</a>
+                    <span style="color: #6b7280; font-weight: 600;"> {{ user.username }}</span>
+                    <a href="/freelancers/" class="btn btn-primary btn-sm"> Freelancers</a>
+                    <a href="/jobs/create/" class="btn btn-primary btn-sm"> Create Job</a>
                     <a href="/logout/" class="btn btn-secondary btn-sm">Logout</a>
                 {% else %}
                     <a href="/login/" class="btn btn-primary btn-sm">Login</a>
@@ -60,7 +60,7 @@
                 </div>
             {% else %}
                 <div class="empty-state">
-                    <div class="empty-state-icon">📋</div>
+                    <div class="empty-state-icon"> </div>
                     <p>No jobs available yet. Be the first to post!</p>
                 </div>
             {% endif %}
@@ -83,14 +83,14 @@
                                 <p class="card-content"><strong>About:</strong> {{ student.bio|truncatewords:15 }}</p>
                             {% endif %}
                             <div class="card-footer">
-                                <span class="card-meta">⭐ Student Freelancer</span>
+                                <span class="card-meta"> Student Freelancer</span>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
             {% else %}
                 <div class="empty-state">
-                    <div class="empty-state-icon">👨‍💻</div>
+                    <div class="empty-state-icon"> </div>
                     <p>No student freelancers registered yet.</p>
                 </div>
             {% endif %}
@@ -108,3 +108,4 @@
 
 </body>
 </html>
+
