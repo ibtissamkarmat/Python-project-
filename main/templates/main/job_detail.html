@@ -136,7 +136,7 @@
             <a href="/" class="logo">FreelanceHub</a>
             <nav class="nav">
                 {% if user.is_authenticated %}
-                    <span style="color: #6b7280; font-weight: 600;">👋 {{ user.username }}</span>
+                    <span style="color: #6b7280; font-weight: 600;"> {{ user.username }}</span>
                     {% if not is_job_poster %}
                         <a href="{% url 'my_applications' %}" class="btn btn-primary btn-sm">My Applications</a>
                     {% endif %}
@@ -260,3 +260,4 @@
 
 </body>
 </html>
+
